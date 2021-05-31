@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import Login from "./login/login";
+import { BrowserRouter as Router } from "react-router-dom";
+import { useEffect, useState } from "react";
+import MainPage from "./chat-view/mainpage";
 
 function App() {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+    const isLoggedIn = user === null ? false : true;
+    console.log("User logged in :" + user);
+    setLoggedIn(isLoggedIn);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      {!isLoggedIn && (
+        <div className="login">
+          <Login />
+        </div>
+      )}
+      {isLoggedIn && <MainPage />}
+    </Router>
   );
 }
 
