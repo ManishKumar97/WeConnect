@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-// const { response } = require("express");
+const cookieparser = require("cookie-parser");
 const authRoutes = require("./routes/authRoute");
 const port = 3001;
 
@@ -28,10 +28,12 @@ mongoose
 app.use(
   cors({
     origin: "http://localhost:3000",
+    credentials: true,
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieparser());
 
 //routes
 app.use("/", authRoutes);

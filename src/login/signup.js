@@ -24,13 +24,14 @@ const SignUp = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.errors) {
           setemailError(data.errors.email);
           setpasswordError(data.errors.password);
-        } else {
+        } else if (data.user) {
           setisUserAdded(true);
         }
       })
