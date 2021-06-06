@@ -37,6 +37,10 @@ userSchema.statics.login = async function (email, password) {
   }
   throw Error("Email not found. Please Signup");
 };
+userSchema.statics.getUser = async function (id) {
+  const user = await this.findOne({ _id: id });
+  return user;
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

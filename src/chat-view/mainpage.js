@@ -1,34 +1,33 @@
-import { useEffect, useState } from "react";
+import NavBar from "./navbar";
+import UsersWindow from "./userswindow";
+import ChatWindow from "./chatWindow";
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import UserService from "../services/userService";
 const MainPage = () => {
-  const [isLoggedIn, setisLoggedIn] = useState(false);
   const history = useHistory();
-
   useEffect(() => {
-    console.log("demo");
-    fetch("http://localhost:3001/", {
-      method: "GET",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(),
-      credentials: "include",
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.status === 302) {
-          setisLoggedIn(false);
-          history.push("/login");
-        } else if (response.status === 200) {
-          console.log("user authenticated");
-          setisLoggedIn(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log("user login status " + isLoggedIn);
+    async function validateUser() {
+      const user = await UserService.getUser();
+      if (!user) {
+        history.push("/login");
+      }
+    }
+    validateUser();
   });
-
-  return <div>Welcome to WeConnect</div>;
+  return (
+    <div>
+      <NavBar />
+      <div className="row">
+        <div className="col-4" style={{ backgroundColor: "lavender" }}>
+          <ChatWindow />
+        </div>
+        <div className="col-8" style={{ backgroundColor: "lightsalmon" }}>
+          <UsersWindow />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MainPage;

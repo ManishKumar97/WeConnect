@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import AuthService from "../services/authService";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -10,27 +11,17 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     seterror("");
-    const user = { email, password };
     e.preventDefault();
-    fetch("http://localhost:3001/login", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(user),
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.errors) {
-          if (data.errors.email) seterror(data.errors.email);
-          else seterror(data.errors.password);
-        } else if (data.user) {
-          console.log("user authenticated");
-          history.push("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    AuthService.login(email, password).then((data) => {
+      console.log(data);
+      if (data.errors) {
+        if (data.errors.email) seterror(data.errors.email);
+        else seterror(data.errors.password);
+      } else if (data.user) {
+        console.log("user authenticated");
+        history.push("/");
+      }
+    });
   };
   return (
     <div className="row py-3 bg-dark">

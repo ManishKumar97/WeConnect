@@ -60,7 +60,29 @@ const login_post = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
-const checkLoginStatus = (req, res) => {
-  res.status(200).json({});
+const getUser = (req, res) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, "weconnect secret", (err, decodedToken) => {
+      if (err) {
+        res.status(302).json({ url: "/login" });
+      } else {
+        User.getUser(decodedToken.id).then((user) => {
+          const email = user.email;
+          res.status(200).json({ email });
+        });
+      }
+    });
+  } else {
+    res.status(302).json({ url: "/login" });
+  }
 };
-module.exports = { signup_post, login_post, checkLoginStatus };
+
+const logout_get = (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    maxAge: 1,
+  });
+  res.sendStatus(200);
+};
+module.exports = { signup_post, login_post, getUser, logout_get };

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import AuthService from "../services/authService";
+import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isUserAdded, setisUserAdded] = useState(false);
+  const history = useHistory();
 
   //error messages
   const [emailError, setemailError] = useState("");
@@ -15,29 +18,17 @@ const SignUp = () => {
     setpasswordError("");
     setisUserAdded(false);
     e.preventDefault();
-    const user = {
-      name,
-      email,
-      password,
-    };
-    fetch("http://localhost:3001/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.errors) {
-          setemailError(data.errors.email);
-          setpasswordError(data.errors.password);
-        } else if (data.user) {
-          setisUserAdded(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    AuthService.signup(name, email, password).then((data) => {
+      console.log(data);
+      if (data.errors) {
+        setemailError(data.errors.email);
+        setpasswordError(data.errors.password);
+      } else if (data.user) {
+        setisUserAdded(true);
+        console.log("user authenticated");
+        history.push("/");
+      }
+    });
   };
 
   return (
