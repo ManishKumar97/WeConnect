@@ -1,6 +1,6 @@
 import Login from "./login/login";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-// import { useEffect, useState } from "react";
+import AddFriend from "./chat-view/addFriend";
 import MainPage from "./chat-view/mainpage";
 
 function App() {
@@ -12,6 +12,9 @@ function App() {
         </Route>
         <Route exact path="/login">
           <Login />
+        </Route>
+        <Route exact path="/addfriend">
+          <AddFriend />
         </Route>
       </Switch>
     </Router>

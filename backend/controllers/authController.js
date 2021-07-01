@@ -60,6 +60,7 @@ const login_post = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
+
 const getUser = (req, res) => {
   const token = req.cookies.jwt;
   if (token) {
@@ -67,15 +68,30 @@ const getUser = (req, res) => {
       if (err) {
         res.status(302).json({ url: "/login" });
       } else {
-        User.getUser(decodedToken.id).then((user) => {
-          const email = user.email;
-          res.status(200).json({ email });
+        User.getUserById(decodedToken.id).then((user) => {
+          //const email = user.email;
+          res.status(200).json({ user });
         });
       }
     });
   } else {
     res.status(302).json({ url: "/login" });
   }
+};
+const findUser = (req, res) => {
+  User.getUserById(req.body.userId)
+    .then((user) => {
+      const currentuser = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      };
+      res.status(200).json({ currentuser });
+    })
+    .catch((err) => {
+      console.log("cannot find user");
+      res.sendStatus(400);
+    });
 };
 
 const logout_get = (req, res) => {
@@ -85,4 +101,4 @@ const logout_get = (req, res) => {
   });
   res.sendStatus(200);
 };
-module.exports = { signup_post, login_post, getUser, logout_get };
+module.exports = { signup_post, login_post, getUser, findUser, logout_get };

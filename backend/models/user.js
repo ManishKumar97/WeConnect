@@ -37,8 +37,12 @@ userSchema.statics.login = async function (email, password) {
   }
   throw Error("Email not found. Please Signup");
 };
-userSchema.statics.getUser = async function (id) {
+userSchema.statics.getUserById = async function (id) {
   const user = await this.findOne({ _id: id });
+  return user;
+};
+userSchema.statics.getUserByEmail = async function (email) {
+  const user = await this.findOne({ email: email });
   return user;
 };
 

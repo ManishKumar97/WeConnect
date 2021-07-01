@@ -1,12 +1,17 @@
 const express = require("express");
+const http = require("http");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieparser = require("cookie-parser");
-const authRoutes = require("./routes/authRoute");
+const socket = require("socket.io");
+const authRoutes = require("./routes/authRoutes");
+const conversationRoutes = require("./routes/conversationRoutes");
 const port = 3001;
 
 // express app
 const app = express();
+const server = http.createServer(app);
+const io = socket(server);
 
 // connect to mongodb
 const dbURI =
@@ -37,8 +42,15 @@ app.use(cookieparser());
 
 //routes
 app.use("/", authRoutes);
+app.use("/", conversationRoutes);
 
 //start express server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Listening to port: ${port}`);
+});
+
+//SocketIO
+
+io.on("connection", (socket) => {
+  console.log("Socket Connection successfull");
 });
