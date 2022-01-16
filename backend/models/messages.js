@@ -18,5 +18,10 @@ const messageSchema = new Schema(
   { timestamps: true }
 );
 
+messageSchema.statics.getMessages = async function (id) {
+  const messages = await this.find({ conversationId: id });
+  return messages;
+};
+
 const Message = mongoose.model("Message", messageSchema);
 module.exports = Message;

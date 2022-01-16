@@ -27,11 +27,12 @@ body {
   position: sticky;
 }
 .chat-box {
+  overflow-y: scroll;
   height: 90vh;
 }
 .chat-scroll-window {
   overflow-y: scroll;
-  height: 75vh;
+  height: 65vh;
 }
 .show > .dropdown-menu {
   display: block;

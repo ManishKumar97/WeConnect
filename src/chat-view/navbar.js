@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = (props) => {
   const history = useHistory();
+  const email = props.email;
   const logOut = (e) => {
     AuthService.logOut().then((response) => {
       if (response.status === 200) {
@@ -19,11 +20,11 @@ const NavBar = (props) => {
   };
   return (
     <nav className="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
-      <Link to="/" className="px-4 h1TextColor">
+      <Link to="/" className="px-2 h1TextColor">
         <h1>WeConnect</h1>
       </Link>
 
-      <ul className="navbar-nav mr-auto">
+      <ul className="navbar-nav mr-auto px-2">
         <li className="nav-item mx-2">
           <button
             type="button"
@@ -44,7 +45,7 @@ const NavBar = (props) => {
       <ul className="navbar-nav ">
         <li className="nav-item mx-2">
           <a className="nav-link disabled" href="/#">
-            test@a.com
+            {email}
           </a>
         </li>
         <li className="nav-item mx-2">

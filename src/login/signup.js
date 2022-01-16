@@ -19,7 +19,6 @@ const SignUp = () => {
     setisUserAdded(false);
     e.preventDefault();
     AuthService.signup(name, email, password).then((data) => {
-      console.log(data);
       if (data.errors) {
         setemailError(data.errors.email);
         setpasswordError(data.errors.password);

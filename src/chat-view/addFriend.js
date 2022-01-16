@@ -7,7 +7,9 @@ import UserService from "../services/userService";
 const AddFriend = () => {
   const [userid, setUserId] = useState("");
   const [email, setemail] = useState("");
+  const [useremail, setuseremail] = useState("");
   const [error, setError] = useState("");
+
   const history = useHistory();
   useEffect(() => {
     async function validateUser() {
@@ -15,7 +17,10 @@ const AddFriend = () => {
 
       if (!user) {
         history.push("/login");
-      } else setUserId(user._id);
+      } else {
+        setUserId(user._id);
+        setuseremail(user.email);
+      }
     }
     validateUser();
   });
@@ -32,7 +37,7 @@ const AddFriend = () => {
   };
   return (
     <div>
-      <NavBar />
+      <NavBar email={useremail} />
       <div className="row pt-3">
         <div className="col-sm-4"></div>
         <div className="col-sm-4">

@@ -31,7 +31,6 @@ const signup_post = (req, res) => {
   user
     .save()
     .then((user) => {
-      console.log("user added");
       const token = createToken(user._id);
       res.cookie("jwt", token, {
         httpOnly: true,

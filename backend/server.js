@@ -6,12 +6,12 @@ const cookieparser = require("cookie-parser");
 const socket = require("socket.io");
 const authRoutes = require("./routes/authRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const port = 3001;
 
 // express app
 const app = express();
 const server = http.createServer(app);
-const io = socket(server);
 
 // connect to mongodb
 const dbURI =
@@ -43,6 +43,7 @@ app.use(cookieparser());
 //routes
 app.use("/", authRoutes);
 app.use("/", conversationRoutes);
+app.use("/", messageRoutes);
 
 //start express server
 server.listen(port, () => {
@@ -50,7 +51,33 @@ server.listen(port, () => {
 });
 
 //SocketIO
-
+const users = new Map();
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 io.on("connection", (socket) => {
-  console.log("Socket Connection successfull");
+  console.log("----Socket Connection successfull");
+  socket.on("addUser", (userid) => {
+    if (userid) users.set(userid, socket.id);
+    console.log(users);
+  });
+
+  socket.on("disconnect", () => {
+    let k = null;
+    users.forEach((value, key) => {
+      if (value == socket.id) {
+        k = key;
+      }
+    });
+    users.delete(k);
+  });
+
+  socket.on("sendMessage", ({ senderid, receiverid, text }) => {
+    io.to(users.get(receiverid)).emit("getMessage", {
+      senderid,
+      text,
+    });
+  });
 });

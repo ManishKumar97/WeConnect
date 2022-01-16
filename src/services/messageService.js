@@ -1,8 +1,8 @@
 const API_URL = "http://localhost:3001/";
-class ConversationService {
-  getConversations(userId) {
-    const req = { userId };
-    return fetch(API_URL + "getconversations", {
+class MessageService {
+  getMessages(conversationId) {
+    const req = { conversationId };
+    return fetch(API_URL + "getmessages", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(req),
@@ -17,9 +17,9 @@ class ConversationService {
       });
   }
 
-  createCoversation(userId, email) {
-    const req = { userId, email };
-    return fetch(API_URL + "createconversation", {
+  sendMessage(conversationId, sender, content) {
+    const req = { conversationId, sender, content };
+    return fetch(API_URL + "sendmessage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req),
@@ -27,11 +27,11 @@ class ConversationService {
     })
       .then((response) => response.json())
       .then((data) => {
-        return data;
+        return data.message;
       })
       .catch((err) => {
         console.log(err);
       });
   }
 }
-export default new ConversationService();
+export default new MessageService();
